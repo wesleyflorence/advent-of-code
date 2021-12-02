@@ -18,8 +18,6 @@
                ((string-equal dir "up") (decf depth paces))))
     (* forward depth)))
 
-(calculate-position *directions*) ; 1698735
-
 ;; Part B
 (defun calculate-aim-position (directions)
   (let ((aim 0)
@@ -36,4 +34,6 @@
                ))
     (* forward depth)))
 
-(calculate-aim-position *directions*) ; 1594785890
+;; Scenarios
+(format t "Problem 02 A: ~a~%" (calculate-position *directions*)) ; 1698735
+(format t "Problem 02 B: ~a~%" (calculate-aim-position *directions*)) ; 1594785890
