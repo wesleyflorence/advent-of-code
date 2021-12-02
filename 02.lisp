@@ -1,11 +1,3 @@
-(defparameter *test* '(
-                      ("forward" 5)
-                      ("down" 5)
-                      ("forward" 8)
-                      ("up" 3)
-                      ("down" 8)
-                      ("forward" 2)))
-
 (defparameter *directions* (mapcar #'(lambda (s)
                                        (let* ((pair (uiop:split-string s :separator " "))
                                               (dir (car pair))
@@ -19,12 +11,11 @@
         (depth 0))
     (loop for (dir paces) in directions
           do (cond
-               ((string-equal dir "forward") (setf forward (+ forward paces)))
-               ((string-equal dir "down") (setf depth (+ depth paces)))
-               ((string-equal dir "up") (setf depth (- depth paces)))))
+               ((string-equal dir "forward") (incf forward paces))
+               ((string-equal dir "down") (incf depth paces))
+               ((string-equal dir "up") (decf depth paces))))
     (* forward depth)))
 
-(calculate-position *test*)
 (calculate-position *directions*) ; 1698735
 
 ;; Part B
@@ -34,14 +25,13 @@
         (depth 0))
     (loop for (dir paces) in directions
           do (cond
-               ((string-equal dir "down") (setf aim (+ aim paces)))
-               ((string-equal dir "up") (setf aim (- aim paces)))
+               ((string-equal dir "down") (incf aim paces))
+               ((string-equal dir "up") (decf aim paces))
                ((string-equal dir "forward")
                 (progn
-                  (setf forward (+ forward paces))
-                  (setf depth (+ depth (* paces aim)))))
+                  (incf forward paces)
+                  (incf depth (* paces aim))))
                ))
     (* forward depth)))
 
-(calculate-aim-position *test*)
 (calculate-aim-position *directions*) ; 1594785890
