@@ -1,23 +1,21 @@
 ;;; Read in the file
 (defparameter *depths* (mapcar #'parse-integer (uiop:read-file-lines "01.input")))
 
-;;; Part 1
-(defun process-depths (depths-list)
-  (loop for (first second) on depths-list
-        count (if second (> second first))))
+(defmacro loop-depths ((&rest window) &body body)
+  "Loops through the depth list, destructuring into a window, stops when last item is nil"
+  `(loop for ,window on *depths*
+         count (if (car (last (list ,@window))) ,@body)))
 
-(defun find-depth-count ()
-  (process-depths *depths*))
-
-;;; Part 2
-(defun process-window (depths-list)
-  (loop for (first second third fourth) on depths-list
-        count (if fourth
-                  (> (+ second third fourth) (+ first second third)))))
+(defun find-paired-depth-count ()
+  "Iterates over depths and counts increases between each depth pair"
+  (loop-depths (depth-1 depth-2)
+    (> depth-2 depth-1)))
 
 (defun find-windowed-depth-count ()
-  (process-window *depths*))
+  "Iterates over depths and counts increase between the sum of a window"
+  (loop-depths (d1 d2 d3 d4)
+    (> (+ d2 d3 d4) (+ d1 d2 d3))))
 
-(defun solve-day-1 ()
-  (format t "Problem 01 A: ~a~%" (find-depth-count))
-  (format t "Problem 01 B: ~a~%" (find-windowed-depth-count)))
+;; Solve Day 1
+(format t "Problem 01 A: ~a~%" (find-paired-depth-count))
+(format t "Problem 01 B: ~a~%" (find-windowed-depth-count))
