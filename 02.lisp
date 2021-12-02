@@ -1,9 +1,11 @@
-(defparameter *directions* (mapcar #'(lambda (s)
-                                       (let* ((pair (uiop:split-string s :separator " "))
-                                              (dir (car pair))
-                                              (paces (parse-integer (cadr pair))))
-                                         (list dir paces)))
-                                   (uiop:read-file-lines "02.input")))
+;; Load file
+(defparameter *directions*
+  (mapcar #'(lambda (s)
+              (let* ((pair (uiop:split-string s :separator " "))
+                     (dir (car pair))
+                     (paces (parse-integer (cadr pair))))
+                (list dir paces)))
+          (uiop:read-file-lines "02.input")))
 
 ;; Part A
 (defun calculate-position (directions)
