@@ -13,16 +13,17 @@
     (mapcar (lambda (digit)
               (cond
                 ((> digit ln) 1)
-                (t 0))) ones)))
+                (t 0)))
+            ones)))
 
 (defun gamma (diagnostic)
   (parse-integer (map 'string #'digit-char
-                      (find-gamma-binary *diagnostic*)) :radix 2))
+                      (find-gamma-binary diagnostic)) :radix 2))
 
 (defun epsilon (diagnostic)
   (parse-integer (map 'string #'(lambda (c)
                                   (digit-char (* (- c 1) -1)))
-                      (find-gamma-binary *diagnostic*)) :radix 2))
+                      (find-gamma-binary diagnostic)) :radix 2))
 
 (defun run-diagnostic (diagnostic)
   (* (gamma diagnostic) (epsilon diagnostic)))
@@ -41,45 +42,40 @@
                 ((eql digit ln) (if oxygen 1 0))
                 ((> digit ln) (if oxygen 1 0))
                 (t (if oxygen 0 1)))))
-    (setq *match* val)
+    (setf *match* val)
     val))
 
 (defun filter-diagnostics (diagnostic &key (oxygen t))
-  (setq *match* nil)
-  (setq diagnostic (map 'list #'rest
+  (setf *match* nil)
+  (setf diagnostic (map 'list #'rest
                         (remove-if-not
                          (lambda (bin)
                            (eql (get-1-or-0 diagnostic :oxygen oxygen)
                                 (car bin)))
                          diagnostic)))
-  (setq *final* (append *final* (list *match*)))
+  (setf *final* (append *final* (list *match*)))
   diagnostic)
 
-(defun filter-oxygen (diagnostic)
-  (setq *final* nil)
-  (setq *match* nil)
+(defun build-final-list (diagnostic oxygen)
+  (setf *final* nil)
+  (setf *match* nil)
   (loop for i from 1 to (length (car diagnostic))
         when (eql 1 (length diagnostic))
           do (return (append *final* (car diagnostic)))
-        do (setq diagnostic (filter-diagnostics diagnostic))
+        do (setf diagnostic (filter-diagnostics diagnostic :oxygen oxygen))
         finally (return *final*)))
+
+(defun filter-oxygen (diagnostic)
+  (build-final-list diagnostic t))
 
 (defun filter-carbon (diagnostic)
-  (setq *final* nil)
-  (setq *match* nil)
-  (loop for i from 1 to (length (car diagnostic))
-        when (eql 1 (length diagnostic))
-          do (return (append *final* (car diagnostic)))
-        do (setq diagnostic (filter-diagnostics diagnostic :oxygen nil))
-        finally (return *final*)))
-
+  (build-final-list diagnostic nil))
 
 (defun run-life-support (diagnostic)
   (let ((oxygen (filter-oxygen diagnostic))
         (carbon (filter-carbon diagnostic)))
     (* (parse-integer (format nil "~{~A~}" (mapcar #'write-to-string oxygen)) :radix 2)
        (parse-integer (format nil "~{~A~}" (mapcar #'write-to-string carbon)) :radix 2))))
-
 
 ;;; Solutions
 (format t "Problem 03 A: ~a~%" (run-diagnostic *diagnostic*))
