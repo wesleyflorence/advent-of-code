@@ -41,17 +41,20 @@
   (loop for board in boards
        collect (filter-move move board)))
 
+(defvar *curboard* nil)
+
 (defun get-winning-board-total (boards)
   (loop for board in boards
         when (some #'null board)
-        collect (reduce (lambda (a b)
-                         (+ a (reduce #'+ b))) (subseq board 0 5)
-                         :initial-value 0)))
+          do (setf *curboard* board)
+             (return (reduce (lambda (a b)
+                               (+ a (reduce #'+ b))) (subseq board 0 5)
+                               :initial-value 0))))
 
 (defun check-for-win (move boards)
   (let ((winner (get-winning-board-total boards)))
     (if winner
-        (* move (car winner)))))
+        (* move winner))))
 
 (defun play (moves boards)
   (loop for move in moves
@@ -60,9 +63,16 @@
 
 ;;; Part B
 (defun find-last-winner (moves boards)
-  (loop for move in moves
-        ))
+  (setf *curboard* nil)
+  (let ((winners '()))
+    (loop for move in moves
+          do (setf boards (play-move move boards))
+             (loop for winner = (check-for-win move boards)
+                   while winner
+                   do (setf boards (remove *curboard* boards :test #'equalp))
+                      (setf winners (push winner winners)))
+          finally (return (car winners)))))
 
 ;;; Solutions
 (format t "Problem 04 A: ~a~%" (play *moves* *boards-with-verts*))
-;(format t "Problem 04 B: ~a~%")
+(format t "Problem 04 B: ~a~%" (find-last-winner *moves* *boards-with-verts*))
