@@ -26,10 +26,12 @@
   (loop for board in boards
         collect (append board (get-vertical-rows board))))
 
-(defparameter *moves* (first (read-input "04.test")))
-(defparameter *boards* (parse-boards (cddr (read-input "04.test"))))
+(defparameter *name* "04.input")
+(defparameter *moves* (first (read-input *name*)))
+(defparameter *boards* (parse-boards (cddr (read-input *name*))))
 (defparameter *boards-with-verts* (add-vertical-row-to-boards *boards*))
 
+;;; Part A
 (defun filter-move (move board)
   (mapcar (lambda (row)
             (remove move row))
@@ -39,19 +41,28 @@
   (loop for board in boards
        collect (filter-move move board)))
 
-(defun check-for-win (boards)
+(defun get-winning-board-total (boards)
   (loop for board in boards
         when (some #'null board)
         collect (reduce (lambda (a b)
                          (+ a (reduce #'+ b))) (subseq board 0 5)
                          :initial-value 0)))
 
+(defun check-for-win (move boards)
+  (let ((winner (get-winning-board-total boards)))
+    (if winner
+        (* move (car winner)))))
+
 (defun play (moves boards)
   (loop for move in moves
-        when (check-for-win boards) return it
-        collect (play-move move boards)))
+        do (setf boards (play-move move boards))
+        when (check-for-win move boards) return it))
 
-(play *moves* *boards-with-verts*)
-(check-for-win *boards*)
-;*boards-with-verts*
-;*moves*
+;;; Part B
+(defun find-last-winner (moves boards)
+  (loop for move in moves
+        ))
+
+;;; Solutions
+(format t "Problem 04 A: ~a~%" (play *moves* *boards-with-verts*))
+;(format t "Problem 04 B: ~a~%")
