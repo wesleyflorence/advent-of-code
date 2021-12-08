@@ -39,10 +39,19 @@
   (loop for board in boards
        collect (filter-move move board)))
 
+(defun check-for-win (boards)
+  (loop for board in boards
+        when (some #'null board)
+        collect (reduce (lambda (a b)
+                         (+ a (reduce #'+ b))) (subseq board 0 5)
+                         :initial-value 0)))
+
 (defun play (moves boards)
   (loop for move in moves
+        when (check-for-win boards) return it
         collect (play-move move boards)))
 
 (play *moves* *boards-with-verts*)
+(check-for-win *boards*)
 ;*boards-with-verts*
 ;*moves*
