@@ -26,7 +26,7 @@
   (loop for board in boards
         collect (append board (get-vertical-rows board))))
 
-(defparameter *name* "04.input")
+(defparameter *name* "input/04.input")
 (defparameter *moves* (first (read-input *name*)))
 (defparameter *boards* (parse-boards (cddr (read-input *name*))))
 (defparameter *boards-with-verts* (add-vertical-row-to-boards *boards*))

@@ -5,7 +5,7 @@
                      (dir (car pair))
                      (paces (parse-integer (cadr pair))))
                 (list dir paces)))
-          (uiop:read-file-lines "02.input")))
+          (uiop:read-file-lines "input/02.input")))
 
 ;; Part A
 (defun calculate-position (directions)

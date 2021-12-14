@@ -37,5 +37,5 @@
           using (hash-value spawn-count) of (simulate days input)
         summing spawn-count))
 
-(format t "Problem 06 A: ~a~%" (simulate-sum-fish 80 "06.input"))
-(format t "Problem 06 B: ~a~%" (simulate-sum-fish 256 "06.input"))
+(format t "Problem 06 A: ~a~%" (simulate-sum-fish 80 "input/06.input"))
+(format t "Problem 06 B: ~a~%" (simulate-sum-fish 256 "input/06.input"))

@@ -9,7 +9,7 @@
       collect (mapcar #'parse-integer
                       (cl-ppcre:all-matches-as-strings "(\\d+)" line)))))
 
-(defparameter *coordinates* (read-input "05.input"))
+(defparameter *coordinates* (read-input "input/05.input"))
 
 (defun line-orientation (coordinates diagonal)
   (loop for coordinate in coordinates

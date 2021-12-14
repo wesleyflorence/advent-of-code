@@ -1,7 +1,7 @@
 ;;; Read in the file
 (defvar *diagnostic*
   (mapcar #'(lambda (s) (map 'list #'digit-char-p s))
-          (uiop:read-file-lines "03.input")))
+          (uiop:read-file-lines "input/03.input")))
 
 ;; Part A
 (defun build-digit-count-list (diagnostic)

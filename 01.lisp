@@ -1,5 +1,5 @@
 ;;; Read in the file
-(defparameter *depths* (mapcar #'parse-integer (uiop:read-file-lines "01.input")))
+(defparameter *depths* (mapcar #'parse-integer (uiop:read-file-lines "input/01.input")))
 
 (defmacro loop-depths ((&rest window) &body body)
   "Loops through the depth list, destructuring into a window, stops when last item is nil"
