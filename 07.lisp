@@ -12,7 +12,8 @@
   (let ((step-list
           (mapcar (lambda (crab-pos)
                     (if fuel-doubles
-                        (loop for i from 0 to (abs (- pos crab-pos)) summing i)
+                        (let ((step (abs (- pos crab-pos))))
+                          (/ (* (1+ step) step) 2))
                         (abs (- pos crab-pos))))
                   steps)))
     (reduce #'+ step-list)))
