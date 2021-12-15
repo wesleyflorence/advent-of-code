@@ -1,4 +1,4 @@
-(ql:quickload :cl-ppcre)
+(in-package :advent)
 
 (defun read-input (file)
   (with-open-file (in file)
@@ -23,5 +23,6 @@
     (reduce #'min (loop for pos from 1 to (reduce #'max steps)
                         collect (get-step-list pos steps fuel-doubles)))))
 
-(format t "Problem 07 A: ~a~%" (find-min-steps "input/07.input"))
-(format t "Problem 07 B: ~a~%" (find-min-steps "input/07.input" t))
+(defun d7/summary ()
+  (format t "Problem 07 A: ~a~%" (find-min-steps "input/07.input"))
+  (format t "Problem 07 B: ~a~%" (find-min-steps "input/07.input" t)))

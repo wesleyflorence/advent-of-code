@@ -1,4 +1,5 @@
-;; Load file
+(in-package :advent)
+
 (defparameter *directions*
   (mapcar #'(lambda (s)
               (let* ((pair (uiop:split-string s :separator " "))
@@ -34,6 +35,6 @@
                ))
     (* forward depth)))
 
-;; Scenarios
-(format t "Problem 02 A: ~a~%" (calculate-position *directions*)) ; 1698735
-(format t "Problem 02 B: ~a~%" (calculate-aim-position *directions*)) ; 1594785890
+(defun d2/summary ()
+  (format t "Problem 02 A: ~a~%" (calculate-position *directions*)) ; 1698735
+  (format t "Problem 02 B: ~a~%" (calculate-aim-position *directions*))) ; 1594785890

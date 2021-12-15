@@ -1,4 +1,4 @@
-(ql:quickload :cl-ppcre)
+(in-package :advent)
 
 ;;; Read in the file
 (defun read-input (file)
@@ -61,5 +61,6 @@
       if (> val 1)
         collect key)))
 
-(format t "Problem 05 A: ~a~%" (find-overlaps *coordinates*))
-(format t "Problem 05 B: ~a~%" (find-overlaps *coordinates* :diagonal t))
+(defun d5/summary ()
+  (format t "Problem 05 A: ~a~%" (find-overlaps *coordinates*))
+  (format t "Problem 05 B: ~a~%" (find-overlaps *coordinates* :diagonal t)))

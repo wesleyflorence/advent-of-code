@@ -1,7 +1,5 @@
-(ql:quickload :cl-ppcre)
-(ql:quickload :split-sequence)
+(in-package :advent)
 
-;;; Read in the file
 (defun read-input (file)
   (with-open-file (in file)
     (loop
@@ -73,6 +71,6 @@
                       (setf winners (push winner winners)))
           finally (return (car winners)))))
 
-;;; Solutions
-(format t "Problem 04 A: ~a~%" (play *moves* *boards-with-verts*))
-(format t "Problem 04 B: ~a~%" (find-last-winner *moves* *boards-with-verts*))
+(defun d4/summary ()
+  (format t "Problem 04 A: ~a~%" (play *moves* *boards-with-verts*))
+  (format t "Problem 04 B: ~a~%" (find-last-winner *moves* *boards-with-verts*)))

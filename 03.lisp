@@ -1,4 +1,5 @@
-;;; Read in the file
+(in-package :advent)
+
 (defvar *diagnostic*
   (mapcar #'(lambda (s) (map 'list #'digit-char-p s))
           (uiop:read-file-lines "input/03.input")))
@@ -77,6 +78,6 @@
     (* (parse-integer (format nil "~{~A~}" (mapcar #'write-to-string oxygen)) :radix 2)
        (parse-integer (format nil "~{~A~}" (mapcar #'write-to-string carbon)) :radix 2))))
 
-;;; Solutions
-(format t "Problem 03 A: ~a~%" (run-diagnostic *diagnostic*))
-(format t "Problem 03 B: ~a~%" (run-life-support *diagnostic*))
+(defun d3/summary ()
+  (format t "Problem 03 A: ~a~%" (run-diagnostic *diagnostic*))
+  (format t "Problem 03 B: ~a~%" (run-life-support *diagnostic*)))

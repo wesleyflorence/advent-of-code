@@ -1,4 +1,5 @@
-;;; Read in the file
+(in-package :advent)
+
 (defparameter *depths* (mapcar #'parse-integer (uiop:read-file-lines "input/01.input")))
 
 (defmacro loop-depths ((&rest window) &body body)
@@ -17,5 +18,6 @@
     (> (+ d2 d3 d4) (+ d1 d2 d3))))
 
 ;; Solve Day 1
-(format t "Problem 01 A: ~a~%" (find-paired-depth-count))
-(format t "Problem 01 B: ~a~%" (find-windowed-depth-count))
+(defun d1/summary ()
+  (format t "Problem 01 A: ~a~%" (find-paired-depth-count))
+  (format t "Problem 01 B: ~a~%" (find-windowed-depth-count)))
