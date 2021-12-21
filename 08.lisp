@@ -6,7 +6,7 @@
                 (cl-ppcre:split "( \\| )" s :omit-unmatched-p t)
               (list (cl-ppcre:split "\\s+" signals)
                     (cl-ppcre:split "\\s+" codes))))
-          (uiop:read-file-lines "input/08.test")))
+          (uiop:read-file-lines "input/08.input")))
 
 ;; Part A
 (defun get-known-codes ()
@@ -25,20 +25,9 @@
             (+ a (length b)))
           (get-known-codes) :initial-value 0))
 
-;; Part 2
-;; len 2 -> 1
-;; len 3 -> 7
-;; len 4 -> 4
-;; len 7 -> 8
-;; len 5, contains both 1 chars -> 3
-;; len 5, intersection with 4 is 2 -> 2
-;; len 5, intersection with 4 is 3 -> 5
-;; len 6, set-difference 4 is 1 -> 0
-;; len 6, if both 1s are in -> 9
-;; len 6, if only one 1 are in -> 6
-
+;; Part B
 (defun build-base-code-lookup (signals)
-  (let ((table (make-hash-table)))
+  (let ((table (make-hash-table :test 'equal)))
     (mapcar (lambda (signal)
               (cond ((equal (length signal) 2)
                      (setf (gethash 1 table) signal))
@@ -56,10 +45,10 @@
   (reduce (lambda (a b) (+ a (char-code b))) str :initial-value 0))
 
 (defun flip-table (table)
-  (let ((flipped (make-hash-table)))
+  (let ((flipped (make-hash-table :test 'equal)))
     (loop for k being each hash-key of table
             using (hash-value v)
-          do (setf (gethash (ascii-sum v) flipped) k))
+          do (setf (gethash (sort (copy-seq v) #'char>) flipped) k))
     flipped))
 
 (defun build-code-lookup (signals)
@@ -71,25 +60,25 @@
                             (setf (gethash 3 table) signal))
                            ((equal 2 (length (set-difference (coerce signal 'list)
                                                              (coerce (gethash 4 table) 'list))))
-                            (setf (gethash 2 table) signal))
+                            (setf (gethash 5 table) signal))
                            (t
-                            (setf (gethash 5 table) signal))))
+                            (setf (gethash 2 table) signal))))
                     ((equal (length signal) 6)
-                     (cond ((equal 3 (length (set-exclusive-or (coerce signal 'list)
+                     (cond ((equal 4 (length (intersection (coerce signal 'list)
                                                                (coerce (gethash 4 table) 'list))))
+                            (setf (gethash 9 table) signal))
+                           ((equal 2 (length (intersection (coerce signal 'list)
+                                                               (coerce (gethash 1 table) 'list))))
                             (setf (gethash 0 table) signal))
-                           ((equal 4 (length (set-exclusive-or (coerce signal 'list)
-                                                               (coerce (gethash 4 table) 'list))))
-                            (setf (gethash 6 table) signal))
                            (t
-                            (setf (gethash 9 table) signal))))))
+                            (setf (gethash 6 table) signal))))))
               signals)
             (flip-table table)))
 
 (defun decode (signals code)
   (let ((lookup (build-code-lookup signals)))
     (parse-integer (reduce (lambda (a b)
-              (concatenate 'string a (write-to-string (gethash (ascii-sum b) lookup))))
+              (concatenate 'string a (write-to-string (gethash (sort (copy-seq b) #'char>) lookup))))
             code :initial-value ""))))
 
 (defun solve (input)
