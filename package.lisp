@@ -8,4 +8,5 @@
            #:d5/summary
            #:d6/summary
            #:d7/summary
-           #:d8/summary))
+           #:d8/summary
+           #:d9/summary))

@@ -11,4 +11,5 @@
                (:file "05" :depends-on ("package"))
                (:file "06" :depends-on ("package"))
                (:file "07" :depends-on ("package"))
-               (:file "08" :depends-on ("package"))))
+               (:file "08" :depends-on ("package"))
+               (:file "09" :depends-on ("package"))))
