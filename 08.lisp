@@ -13,11 +13,11 @@
   (mapcar (lambda (input)
             (let ((codes (second input)))
               (remove-if-not (lambda (code)
-                           (cond ((equal (length code) 2) t)   ; 1
-                                 ((equal (length code) 3) t)   ; 7
-                                 ((equal (length code) 4) t)   ; 4
-                                 ((equal (length code) 7) t))) ; 8
-                         codes)))
+                               (cond ((equal (length code) 2) t)
+                                     ((equal (length code) 3) t)
+                                     ((equal (length code) 4) t)
+                                     ((equal (length code) 7) t)))
+                             codes)))
           (read-input)))
 
 (defun get-total-known-codes ()
@@ -41,9 +41,6 @@
             signals)
     table))
 
-(defun ascii-sum (str)
-  (reduce (lambda (a b) (+ a (char-code b))) str :initial-value 0))
-
 (defun flip-table (table)
   (let ((flipped (make-hash-table :test 'equal)))
     (loop for k being each hash-key of table
@@ -51,35 +48,36 @@
           do (setf (gethash (sort (copy-seq v) #'char>) flipped) k))
     flipped))
 
+(defmacro compare-with-set-op (set-operation key signal)
+  `(length (,set-operation (coerce ,signal 'list)
+                           (coerce (gethash ,key table) 'list))))
+
 (defun build-code-lookup (signals)
   (let ((table (build-base-code-lookup signals)))
     (mapcar (lambda (signal)
               (cond ((equal (length signal) 5)
-                     (cond ((equal 3 (length (set-difference (coerce signal 'list)
-                                                             (coerce (gethash 1 table) 'list))))
+                     (cond ((equal 3 (compare-with-set-op set-difference 1 signal))
                             (setf (gethash 3 table) signal))
-                           ((equal 2 (length (set-difference (coerce signal 'list)
-                                                             (coerce (gethash 4 table) 'list))))
+                           ((equal 2 (compare-with-set-op set-difference 4 signal))
                             (setf (gethash 5 table) signal))
-                           (t
-                            (setf (gethash 2 table) signal))))
+                           (t (setf (gethash 2 table) signal))))
                     ((equal (length signal) 6)
-                     (cond ((equal 4 (length (intersection (coerce signal 'list)
-                                                               (coerce (gethash 4 table) 'list))))
+                     (cond ((equal 4 (compare-with-set-op intersection 4 signal))
                             (setf (gethash 9 table) signal))
-                           ((equal 2 (length (intersection (coerce signal 'list)
-                                                               (coerce (gethash 1 table) 'list))))
+                           ((equal 2 (compare-with-set-op intersection 1 signal))
                             (setf (gethash 0 table) signal))
-                           (t
-                            (setf (gethash 6 table) signal))))))
-              signals)
-            (flip-table table)))
+                           (t (setf (gethash 6 table) signal))))))
+            signals)
+    (flip-table table)))
 
 (defun decode (signals code)
   (let ((lookup (build-code-lookup signals)))
-    (parse-integer (reduce (lambda (a b)
-              (concatenate 'string a (write-to-string (gethash (sort (copy-seq b) #'char>) lookup))))
-            code :initial-value ""))))
+    (parse-integer
+     (reduce (lambda (a b)
+               (concatenate 'string a
+                            (write-to-string (gethash (sort (copy-seq b) #'char>)
+                                                      lookup))))
+             code :initial-value ""))))
 
 (defun solve (input)
   (reduce (lambda (a b)
