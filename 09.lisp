@@ -13,9 +13,9 @@
     (loop for neighbor-x from (max (- x 1) 0) to (min (+ x 1) width) do
       (if (not (and (equal x neighbor-x)
                     (equal y neighbor-y)))
-          (setf (gethash (format nil "[~a, ~a]" x y) *neighbors* '())
-                (concatenate 'list (gethash (format nil "[~a, ~a]" x y) *neighbors* '())
-                             (list (format nil "[~a, ~a]" neighbor-x neighbor-y))))))))
+          (setf (gethash (cons x y) *neighbors* '())
+                (concatenate 'list (gethash (cons x y) *neighbors* '())
+                             (list (cons neighbor-x neighbor-y))))))))
 
 (defun build-cave-graph (input)
   (setf *floor-nodes* (make-hash-table :test 'equal))
@@ -27,7 +27,7 @@
             (loop for node in y-row
                   for x from 0 do
                     (setf (gethash
-                           (format nil "[~a, ~a]" x y)
+                           (cons x y)
                            *floor-nodes*)
                           node)
                     (build-neighbors x y width height)))))
