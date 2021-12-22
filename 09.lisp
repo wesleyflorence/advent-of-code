@@ -3,7 +3,7 @@
 (defun read-input ()
   (mapcar (lambda (s)
             (map 'list #'digit-char-p s))
-          (uiop:read-file-lines "input/09.test")))
+          (uiop:read-file-lines "input/09.input")))
 
 (defparameter *floor-nodes* nil)
 (defparameter *neighbors* nil)
@@ -20,8 +20,8 @@
 (defun build-cave-graph (input)
   (setf *floor-nodes* (make-hash-table :test 'equal))
   (setf *neighbors* (make-hash-table :test 'equal))
-  (let ((height (length input))
-        (width (length (car input))))
+  (let ((height (- (length input) 1))
+        (width (- (length (car input)) 1)))
     (loop for y-row in input
           for y from 0 do
             (loop for node in y-row
@@ -32,6 +32,18 @@
                           node)
                     (build-neighbors x y width height)))))
 
+(defun find-low-point-sum (input)
+  (build-cave-graph input)
+  (let ((acc 0))
+    (maphash (lambda (key value)
+               (if (< (gethash key *floor-nodes*)
+                      (reduce (lambda (a b) (min a (gethash b *floor-nodes*)))
+                              value
+                              :initial-value most-positive-fixnum))
+                   (incf acc (+ (gethash key *floor-nodes*) 1))))
+             *neighbors*)
+    acc))
+
 (defun d9/summary ()
-  (format t "Problem 09 A: ~a~%" "yo")
+  (format t "Problem 09 A: ~a~%" (find-low-point-sum (read-input)))
   (format t "Problem 09 B: ~a~%" "yo"))
