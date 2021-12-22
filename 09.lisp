@@ -8,14 +8,14 @@
 (defparameter *floor-nodes* nil)
 (defparameter *neighbors* nil)
 
-;;close but something weird is up when storing nieghbor lists
 (defun build-neighbors (x y width height)
-  (loop for neighbor-y from (min (- y 1) 0) below (max (+ y 1) height) do
-    (loop for neighbor-x from (min (- x 1) 0) below (max (+ x 1) width) do
-      (if (and (not (equal x neighbor-x))
-               (not (equal y neighbor-y)))
-          (let ((entry (gethash (format nil "[~a, ~a]" x y) *neighbors* '())))
-            (setf entry (concatenate 'list entry (list (format nil "[~a, ~a]" neighbor-x neighbor-y)))))))))
+  (loop for neighbor-y from (max (- y 1) 0) to (min (+ y 1) height) do
+    (loop for neighbor-x from (max (- x 1) 0) to (min (+ x 1) width) do
+      (if (not (and (equal x neighbor-x)
+                    (equal y neighbor-y)))
+          (setf (gethash (format nil "[~a, ~a]" x y) *neighbors* '())
+                (concatenate 'list (gethash (format nil "[~a, ~a]" x y) *neighbors* '())
+                             (list (format nil "[~a, ~a]" neighbor-x neighbor-y))))))))
 
 (defun build-cave-graph (input)
   (setf *floor-nodes* (make-hash-table :test 'equal))
